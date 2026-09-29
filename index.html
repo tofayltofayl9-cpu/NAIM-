@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Information</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,"Noto Sans Bengali",sans-serif;
+}
+
+body{
+  background:#f5f6fb;
+  color:#222;
+  padding-bottom:80px;
+}
+
+header{
+  background:linear-gradient(135deg,#5b4bdb,#7c3aed);
+  color:white;
+  padding:22px 18px;
+  border-radius:0 0 25px 25px;
+}
+
+header h1{
+  font-size:22px;
+  margin-bottom:5px;
+}
+
+header p{
+  opacity:.85;
+  font-size:13px;
+}
+
+.container{
+  padding:15px;
+  max-width:700px;
+  margin:auto;
+}
+
+.search{
+  width:100%;
+  padding:14px;
+  border:0;
+  border-radius:14px;
+  margin:15px 0;
+  box-shadow:0 3px 12px #00000010;
+  outline:none;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.stat{
+  background:white;
+  padding:15px 8px;
+  border-radius:16px;
+  text-align:center;
+  box-shadow:0 3px 12px #0000000d;
+}
+
+.stat b{
+  display:block;
+  font-size:21px;
+  color:#5b4bdb;
+}
+
+.stat span{
+  font-size:12px;
+  color:#777;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:18px;
+  margin-bottom:12px;
+  box-shadow:0 3px 15px #0000000b;
+}
+
+.row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.avatar{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#eee;
+  flex-shrink:0;
+}
+
+.info{
+  flex:1;
+}
+
+.info b{
+  font-size:17px;
+}
+
+.muted{
+  color:#777;
+  font-size:13px;
+  margin-top:4px;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+.primary{
+  background:#5b4bdb;
+  color:white;
+  padding:13px 18px;
+  border-radius:12px;
+}
+
+.secondary{
+  background:#eee;
+  padding:11px 15px;
+  border-radius:10px;
+}
+
+.delete{
+  background:#ffe5e5;
+  color:#d00;
+  padding:9px;
+  border-radius:9px;
+}
+
+.drive-btn{
+  display:inline-block;
+  margin-top:10px;
+  background:#eef0ff;
+  color:#4b3cc4;
+  padding:9px 12px;
+  border-radius:9px;
+  text-decoration:none;
+  font-size:13px;
+}
+
+.doc-icon{
+  width:50px;
+  height:50px;
+  background:#eef0ff;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  flex-shrink:0;
+}
+
+.fab{
+  position:fixed;
+  right:20px;
+  bottom:85px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#5b4bdb;
+  color:white;
+  font-size:28px;
+  box-shadow:0 5px 20px #0003;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:70px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -3px 15px #0001;
+  z-index:20;
+}
+
+.bottom button{
+  background:none;
+  color:#777;
+  font-size:12px;
+}
+
+.bottom button.active{
+  color:#5b4bdb;
+  font-weight:bold;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.empty{
+  text-align:center;
+  color:#888;
+  padding:35px 10px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0007;
+  z-index:50;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  background:white;
+  width:100%;
+  max-width:700px;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:25px 25px 0 0;
+  padding:20px;
+}
+
+.modal-box h2{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  margin:12px 0 6px;
+  color:#555;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:11px;
+  outline:none;
+  background:#fafafa;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.actions button{
+  flex:1;
+}
+
+.tree{
+  padding-left:15px;
+}
+
+.tree-item{
+  border-left:2px solid #5b4bdb;
+  padding:10px 0 10px 18px;
+  margin-left:8px;
+}
+
+.profile-photo{
+  width:110px;
+  height:110px;
+  object-fit:cover;
+  border-radius:50%;
+  display:block;
+  margin:10px auto 15px;
+  background:#eee;
+}
+
+.profile-center{
+  text-align:center;
+}
+
+.pin-screen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#5b4bdb,#7c3aed);
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.pin-screen.show{
+  display:flex;
+}
+
+.pin-box{
+  background:white;
+  width:100%;
+  max-width:350px;
+  padding:25px;
+  border-radius:22px;
+  text-align:center;
+}
+
+.pin-box h2{
+  margin-bottom:10px;
+}
+
+.pin-box input{
+  text-align:center;
+  font-size:24px;
+  letter-spacing:8px;
+  margin:18px 0;
+}
+
+.setting-btn{
+  width:100%;
+  padding:14px;
+  text-align:left;
+  background:white;
+  border-radius:13px;
+  margin-bottom:10px;
+}
+
+.small{
+  font-size:12px;
+  color:#888;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>👨‍👩‍👧‍👦 Family Information</h1>
+  <p>আপনার পরিবারের সকল তথ্য এক জায়গায়</p>
+</header>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+<input
+  id="homeSearch"
+  class="search"
+  placeholder="🔎 নাম, সম্পর্ক বা ফোন দিয়ে খুঁজুন..."
+  oninput="renderMembers()"
+>
+
+<div class="stats">
+  <div class="stat">
+    <b id="memberCount">0</b>
+    <span>সদস্য</span>
+  </div>
+
+  <div class="stat">
+    <b id="docCount">0</b>
+    <span>ডকুমেন্ট</span>
+  </div>
+
+  <div class="stat">
+    <b>🔒</b>
+    <span>সুরক্ষিত</span>
+  </div>
+</div>
+
+<div id="memberList"></div>
+
+</section>
+
+
+<!-- FAMILY TREE -->
+<section id="tree" class="page">
+
+<div class="card">
+  <h2>🌳 Family Tree</h2>
+  <p class="muted">পরিবারের সদস্যদের সম্পর্ক অনুযায়ী দেখুন</p>
+</div>
+
+<div id="treeList" class="tree"></div>
+
+</section>
+
+
+<!-- DOCUMENTS -->
+<section id="documents" class="page">
+
+<div class="card">
+  <h2>📂 Documents</h2>
+  <p class="muted">
+    Google Drive-এ রাখা গুরুত্বপূর্ণ ডকুমেন্টের লিংক সংরক্ষণ করুন।
+  </p>
+</div>
+
+<div id="docList"></div>
+
+<button class="primary" onclick="openDoc()">
+  ＋ Google Drive Document
+</button>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+
+<div id="profileContent"></div>
+
+</section>
+
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+
+<div class="card">
+  <h2>⚙️ Settings</h2>
+  <p class="muted">অ্যাপের সেটিংস ও Backup</p>
+</div>
+
+<button class="setting-btn" onclick="changePin()">
+  🔐 PIN পরিবর্তন
+</button>
+
+<button class="setting-btn" onclick="exportData()">
+  💾 Backup তৈরি করুন
+</button>
+
+<button class="setting-btn" onclick="document.getElementById('restoreFile').click()">
+  📥 Backup Restore করুন
+</button>
+
+<input
+  type="file"
+  id="restoreFile"
+  accept=".json"
+  style="display:none"
+  onchange="importData(event)"
+>
+
+<button class="setting-btn" onclick="clearAll()">
+  🗑️ সব তথ্য মুছে ফেলুন
+</button>
+
+<div class="card">
+  <b>Family Information</b>
+  <p class="small">Version 3.0</p>
+  <p class="small">তথ্য আপনার ডিভাইসের Local Storage-এ সংরক্ষিত হয়।</p>
+</div>
+
+</section>
+
+</div>
+
+
+<!-- ADD BUTTON -->
+<button class="fab" onclick="openMember()">＋</button>
+
+
+<!-- BOTTOM NAV -->
+<nav class="bottom">
+
+<button class="active" onclick="go('home',this)">
+  🏠<br>Home
+</button>
+
+<button onclick="go('tree',this)">
+  🌳<br>Family
+</button>
+
+<button onclick="go('documents',this)">
+  📂<br>Documents
+</button>
+
+<button onclick="go('settings',this)">
+  ⚙️<br>Settings
+</button>
+
+</nav>
+
+
+<!-- MEMBER MODAL -->
+<div class="modal" id="memberModal">
+
+<div class="modal-box">
+
+<h2>👤 পরিবারের সদস্য</h2>
+
+<input type="hidden" id="editId">
+
+<label>নাম</label>
+<input id="memberName" placeholder="পূর্ণ নাম">
+
+<label>সম্পর্ক</label>
+<input id="memberRelation" placeholder="যেমন: বাবা, মা, ভাই">
+
+<label>মোবাইল</label>
+<input id="memberPhone" type="tel" placeholder="01XXXXXXXXX">
+
+<label>জন্ম তারিখ</label>
+<input id="memberBirth" type="date">
+
+<label>রক্তের গ্রুপ</label>
+<select id="memberBlood">
+  <option value="">নির্বাচন করুন</option>
+  <option>A+</option>
+  <option>A-</option>
+  <option>B+</option>
+  <option>B-</option>
+  <option>AB+</option>
+  <option>AB-</option>
+  <option>O+</option>
+  <option>O-</option>
+</select>
+
+<label>ঠিকানা</label>
+<textarea id="memberAddress" placeholder="বর্তমান/স্থায়ী ঠিকানা"></textarea>
+
+<label>ছবির URL</label>
+<input id="memberPhoto" placeholder="https://...">
+
+<label>পরিবারের অভিভাবক</label>
+<select id="memberParent">
+  <option value="">কোনো Parent নেই</option>
+</select>
+
+<div class="actions">
+  <button class="secondary" onclick="closeModal()">বাতিল</button>
+  <button class="primary" onclick="saveMember()">সংরক্ষণ</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- DOCUMENT MODAL -->
+<div class="modal" id="docModal">
+
+<div class="modal-box">
+
+<h2>📂 Google Drive Document</h2>
+
+<label>ডকুমেন্টের নাম</label>
+<input
+  id="docName"
+  placeholder="যেমন: NID Card, জন্মনিবন্ধন, সার্টিফিকেট"
+>
+
+<label>Google Drive Link</label>
+<input
+  id="docUrl"
+  type="url"
+  placeholder="https://drive.google.com/file/d/..."
+>
+
+<p class="small" style="margin-top:6px;">
+  ⚠️ Google Drive ফাইলের Sharing অপশনে
+  <b>Anyone with the link → Viewer</b>
+  নির্বাচন করুন।
+</p>
+
+<label>বিবরণ</label>
+<textarea
+  id="docNote"
+  placeholder="ডকুমেন্ট সম্পর্কে কিছু লিখুন..."
+></textarea>
+
+<div class="actions">
+  <button class="secondary" onclick="closeModal()">বাতিল</button>
+  <button class="primary" onclick="saveDoc()">সংরক্ষণ</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- PIN SCREEN -->
+<div class="pin-screen" id="pinScreen">
+
+<div class="pin-box">
+
+<h2>🔐 Family Information</h2>
+
+<p>অ্যাপটি খুলতে PIN দিন</p>
+
+<input
+  id="pinInput"
+  type="password"
+  inputmode="numeric"
+  maxlength="6"
+  placeholder="••••"
+>
+
+<button class="primary" style="width:100%" onclick="unlock()">
+  Unlock
+</button>
+
+<p id="pinError" style="color:red;margin-top:12px;"></p>
+
+</div>
+</div>
+
+
+<script>
+
+let members =
+JSON.parse(localStorage.getItem("family_v3_members") || "[]");
+
+let docs =
+JSON.parse(localStorage.getItem("family_v3_docs") || "[]");
+
+let pin =
+localStorage.getItem("family_v3_pin");
+
+
+// ==========================
+// SAVE
+// ==========================
+
+function save(){
+
+  localStorage.setItem(
+    "family_v3_members",
+    JSON.stringify(members)
+  );
+
+  localStorage.setItem(
+    "family_v3_docs",
+    JSON.stringify(docs)
+  );
+
+  updateStats();
+}
+
+
+// ==========================
+// ESCAPE HTML
+// ==========================
+
+function esc(value){
+
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+// ==========================
+// AVATAR
+// ==========================
+
+function avatar(member){
+
+  if(member.photo){
+
+    return `
+      <img
+        class="avatar"
+        src="${esc(member.photo)}"
+        onerror="this.src='https://via.placeholder.com/100?text=👤'"
+      >
+    `;
+
+  }
+
+  return `
+    <div class="avatar"
+      style="
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:25px;
+      ">
+      👤
+    </div>
+  `;
+}
+
+
+// ==========================
+// RENDER MEMBERS
+// ==========================
+
+function renderMembers(){
+
+  const box =
+    document.getElementById("memberList");
+
+  const search =
+    document.getElementById("homeSearch")
+    .value
+    .toLowerCase();
+
+  const filtered =
+    members.filter(m => {
+
+      return (
+        (m.name || "").toLowerCase().includes(search) ||
+        (m.relation || "").toLowerCase().includes(search) ||
+        (m.phone || "").includes(search)
+      );
+
+    });
+
+  if(!filtered.length){
+
+    box.innerHTML = `
+      <div class="empty">
+        👨‍👩‍👧‍👦<br><br>
+        কোনো সদস্য পাওয়া যায়নি।
+      </div>
+    `;
+
+    return;
+  }
+
+
+  box.innerHTML =
+    filtered.map(m => `
+
+      <div class="card">
+
+        <div class="row">
+
+          ${avatar(m)}
+
+          <div
+            class="info"
+            onclick="showProfile(${m.id})"
+            style="cursor:pointer"
+          >
+
+            <b>${esc(m.name)}</b>
+
+            <div class="muted">
+              ${esc(m.relation)}
+            </div>
+
+            ${
+              m.phone
+              ?
+              `<div class="muted">📞 ${esc(m.phone)}</div>`
+              :
+              ""
+            }
+
+          </div>
+
+          <button
+            class="delete"
+            onclick="deleteMember(${m.id})"
+          >
+            🗑️
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+
+// ==========================
+// OPEN MEMBER
+// ==========================
+
+function openMember(id=null){
+
+  document.getElementById("editId").value =
+    id || "";
+
+  document.getElementById("memberName").value="";
+  document.getElementById("memberRelation").value="";
+  document.getElementById("memberPhone").value="";
+  document.getElementById("memberBirth").value="";
+  document.getElementById("memberBlood").value="";
+  document.getElementById("memberAddress").value="";
+  document.getElementById("memberPhoto").value="";
+
+  const parent =
+    document.getElementById("memberParent");
+
+  parent.innerHTML =
+    `<option value="">কোনো Parent নেই</option>` +
+    members
+      .filter(m => m.id != id)
+      .map(m =>
+        `<option value="${m.id}">
+          ${esc(m.name)}
+        </option>`
+      )
+      .join("");
+
+  if(id){
+
+    const m =
+      members.find(x => x.id == id);
+
+    if(m){
+
+      document.getElementById("memberName").value =
+        m.name || "";
+
+      document.getElementById("memberRelation").value =
+        m.relation || "";
+
+      document.getElementById("memberPhone").value =
+        m.phone || "";
+
+      document.getElementById("memberBirth").value =
+        m.birth || "";
+
+      document.getElementById("memberBlood").value =
+        m.blood || "";
+
+      document.getElementById("memberAddress").value =
+        m.address || "";
+
+      document.getElementById("memberPhoto").value =
+        m.photo || "";
+
+      parent.value =
+        m.parentId || "";
+
+    }
+
+  }
+
+  document
+    .getElementById("memberModal")
+    .classList.add("show");
+}
+
+
+// ==========================
+// SAVE MEMBER
+// ==========================
+
+function saveMember(){
+
+  const name =
+    document.getElementById("memberName")
+    .value.trim();
+
+  if(!name){
+
+    alert("নাম লিখুন");
+
+    return;
+  }
+
+  const editId =
+    document.getElementById("editId").value;
+
+  const data = {
+
+    id:
+      editId
+      ?
+      Number(editId)
+      :
+      Date.now(),
+
+    name,
+
+    relation:
+      document.getElementById("memberRelation")
+      .value.trim(),
+
+    phone:
+      document.getElementById("memberPhone")
+      .value.trim(),
+
+    birth:
+      document.getElementById("memberBirth")
+      .value,
+
+    blood:
+      document.getElementById("memberBlood")
+      .value,
+
+    address:
+      document.getElementById("memberAddress")
+      .value.trim(),
+
+    photo:
+      document.getElementById("memberPhoto")
+      .value.trim(),
+
+    parentId:
+      document.getElementById("memberParent")
+      .value
+      ?
+      Number(document.getElementById("memberParent").value)
+      :
+      null
+  };
+
+
+  if(editId){
+
+    const index =
+      members.findIndex(
+        m => m.id == Number(editId)
+      );
+
+    if(index !== -1){
+
+      members[index] = data;
+
+    }
+
+  }else{
+
+    members.push(data);
+
+  }
+
+
+  save();
+
+  closeModal();
+
+  renderMembers();
+
+  renderTree();
+}
+
+
+// ==========================
+// SHOW PROFILE
+// ==========================
+
+function showProfile(id){
+
+  const m =
+    members.find(x => x.id == id);
+
+  if(!m) return;
+
+  go("profile");
+
+  const box =
+    document.getElementById("profileContent");
+
+  box.innerHTML = `
+
+    <div class="card">
+
+      <div class="profile-center">
+
+        ${
+          m.photo
+          ?
+          `<img
+             class="profile-photo"
+             src="${esc(m.photo)}"
+             onerror="this.src='https://via.placeholder.com/200?text=👤'"
+           >`
+          :
+          `<div
+            class="profile-photo"
+            style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:50px;
+            ">
+            👤
+          </div>`
+        }
+
+        <h2>${esc(m.name)}</h2>
+
+        <p class="muted">
+          ${esc(m.relation)}
+        </p>
+
+      </div>
+
+      <hr style="margin:20px 0;border:0;border-top:1px solid #eee">
+
+      <p>📞 <b>মোবাইল:</b>
+        ${esc(m.phone || "নেই")}
+      </p>
+
+      <br>
+
+      <p>🎂 <b>জন্ম তারিখ:</b>
+        ${esc(m.birth || "নেই")}
+      </p>
+
+      <br>
+
+      <p>🩸 <b>রক্তের গ্রুপ:</b>
+        ${esc(m.blood || "নেই")}
+      </p>
+
+      <br>
+
+      <p>📍 <b>ঠিকানা:</b><br>
+        ${esc(m.address || "নেই")}
+      </p>
+
+      <div class="actions">
+
+        <button
+          class="secondary"
+          onclick="openMember(${m.id})"
+        >
+          ✏️ Edit
+        </button>
+
+        <button
+          class="delete"
+          onclick="deleteMember(${m.id})"
+        >
+          🗑️ Delete
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+// ==========================
+// DELETE MEMBER
+// ==========================
+
+function deleteMember(id){
+
+  if(!confirm("এই সদস্যকে মুছে ফেলবেন?"))
+    return;
+
+  members =
+    members.filter(m => m.id != id);
+
+  save();
+
+  renderMembers();
+
+  renderTree();
+
+  if(
+    document.getElementById("profile")
+    .classList.contains("active")
+  ){
+
+    go("home");
+
+  }
+}
+
+
+// ==========================
+// FAMILY TREE
+// ==========================
+
+function renderTree(){
+
+  const box =
+    document.getElementById("treeList");
+
+  if(!members.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        কোনো সদস্য নেই।
+      </div>`;
+
+    return;
+  }
+
+
+  function makeTree(parentId=null){
+
+    const children =
+      members.filter(
+        m =>
+          (m.parentId || null) === parentId
+      );
+
+    return children.map(m => `
+
+      <div class="tree-item">
+
+        <div
+          class="card"
+          onclick="showProfile(${m.id})"
+          style="cursor:pointer"
+        >
+
+          <div class="row">
+
+            ${avatar(m)}
+
+            <div class="info">
+
+              <b>${esc(m.name)}</b>
+
+              <div class="muted">
+                ${esc(m.relation)}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        ${makeTree(m.id)}
+
+      </div>
+
+    `).join("");
+  }
+
+
+  box.innerHTML =
+    makeTree(null);
+
+
+  // যাদের Parent সেট করা হয়নি
+  const used =
+    new Set(
+      members
+        .filter(m => m.parentId)
+        .map(m => m.id)
+    );
+
+  const disconnected =
+    members.filter(
+      m =>
+        m.parentId &&
+        !members.some(
+          p => p.id === m.parentId
+        )
+    );
+
+  if(disconnected.length){
+
+    box.innerHTML += disconnected
+      .map(m => `
+
+        <div class="tree-item">
+
+          <div class="card">
+
+            ${avatar(m)}
+
+            <b>${esc(m.name)}</b>
+
+            <div class="muted">
+              ${esc(m.relation)}
+            </div>
+
+          </div>
+
+        </div>
+
+      `)
+      .join("");
+
+  }
+}
+
+
+// ==========================
+// DOCUMENT MODAL
+// ==========================
+
+function openDoc(){
+
+  document.getElementById("docName").value="";
+  document.getElementById("docUrl").value="";
+  document.getElementById("docNote").value="";
+
+  document
+    .getElementById("docModal")
+    .classList.add("show");
+}
+
+
+// ==========================
+// SAVE DOCUMENT
+// ==========================
+
+function saveDoc(){
+
+  const name =
+    document.getElementById("docName")
+    .value.trim();
+
+  const url =
+    document.getElementById("docUrl")
+    .value.trim();
+
+  const note =
+    document.getElementById("docNote")
+    .value.trim();
+
+
+  if(!name){
+
+    alert("ডকুমেন্টের নাম দিন");
+
+    return;
+  }
+
+
+  if(!url){
+
+    alert("Google Drive Link দিন");
+
+    return;
+  }
+
+
+  if(
+    !url.includes("drive.google.com") &&
+    !url.includes("docs.google.com")
+  ){
+
+    alert(
+      "দয়া করে একটি Google Drive / Google Docs Link দিন"
+    );
+
+    return;
+  }
+
+
+  docs.push({
+
+    id:Date.now(),
+
+    name,
+
+    url,
+
+    note,
+
+    createdAt:
+      new Date().toISOString()
+
+  });
+
+
+  save();
+
+  closeModal();
+
+  renderDocs();
+
+  alert("ডকুমেন্ট সংরক্ষণ হয়েছে ✅");
+}
+
+
+// ==========================
+// RENDER DOCUMENTS
+// ==========================
+
+function renderDocs(){
+
+  const box =
+    document.getElementById("docList");
+
+
+  if(!docs.length){
+
+    box.innerHTML = `
+
+      <div class="empty">
+
+        📂<br><br>
+
+        কোনো ডকুমেন্ট নেই।
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  box.innerHTML =
+    docs.map(d => `
+
+      <div class="card">
+
+        <div class="row">
+
+          <div class="doc-icon">
+            📄
+          </div>
+
+          <div class="info">
+
+            <b>
+              ${esc(d.name)}
+            </b>
+
+            ${
+              d.note
+              ?
+              `<div class="muted">
+                ${esc(d.note)}
+              </div>`
+              :
+              ""
+            }
+
+            <a
+              href="${esc(d.url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="drive-btn"
+            >
+              📂 Google Drive থেকে খুলুন
+            </a>
+
+          </div>
+
+          <button
+            class="delete"
+            onclick="deleteDoc(${d.id})"
+          >
+            🗑️
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+
+// ==========================
+// DELETE DOCUMENT
+// ==========================
+
+function deleteDoc(id){
+
+  if(!confirm("এই ডকুমেন্ট মুছে ফেলবেন?"))
+    return;
+
+  docs =
+    docs.filter(d => d.id != id);
+
+  save();
+
+  renderDocs();
+}
+
+
+// ==========================
+// NAVIGATION
+// ==========================
+
+function go(page,button=null){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p =>
+      p.classList.remove("active")
+    );
+
+
+  const target =
+    document.getElementById(page);
+
+  if(target)
+    target.classList.add("active");
+
+
+  document
+    .querySelectorAll(".bottom button")
+    .forEach(b =>
+      b.classList.remove("active")
+    );
+
+
+  if(button)
+    button.classList.add("active");
+
+
+  if(page === "tree")
+    renderTree();
+
+  if(page === "documents")
+    renderDocs();
+
+  if(page === "home")
+    renderMembers();
+}
+
+
+// ==========================
+// CLOSE MODAL
+// ==========================
+
+function closeModal(){
+
+  document
+    .querySelectorAll(".modal")
+    .forEach(m =>
+      m.classList.remove("show")
+    );
+}
+
+
+// ==========================
+// STATS
+// ==========================
+
+function updateStats(){
+
+  document.getElementById("memberCount")
+    .textContent = members.length;
+
+  document.getElementById("docCount")
+    .textContent = docs.length;
+}
+
+
+// ==========================
+// EXPORT BACKUP
+// ==========================
+
+function exportData(){
+
+  const data = {
+
+    members,
+
+    docs,
+
+    date:
+      new Date().toISOString()
+
+  };
+
+
+  const blob =
+    new Blob(
+      [JSON.stringify(data,null,2)],
+      {type:"application/json"}
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+
+  a.download =
+    "family-information-backup.json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+
+// ==========================
+// IMPORT BACKUP
+// ==========================
+
+function importData(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file) return;
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload = function(e){
+
+    try{
+
+      const data =
+        JSON.parse(e.target.result);
+
+
+      if(
+        !Array.isArray(data.members) ||
+        !Array.isArray(data.docs)
+      ){
+
+        alert("Backup ফাইলটি সঠিক নয়");
+
+        return;
+      }
+
+
+      members = data.members;
+
+      docs = data.docs;
+
+
+      save();
+
+      renderMembers();
+
+      renderDocs();
+
+      renderTree();
+
+      alert("Backup Restore হয়েছে ✅");
+
+    }
+    catch(error){
+
+      alert("Backup পড়া যায়নি");
+
+    }
+
+  };
+
+
+  reader.readAsText(file);
+}
+
+
+// ==========================
+// CLEAR ALL
+// ==========================
+
+function clearAll(){
+
+  if(
+    !confirm(
+      "সকল সদস্য ও ডকুমেন্ট মুছে ফেলবেন?"
+    )
+  )
+    return;
+
+
+  members = [];
+
+  docs = [];
+
+  save();
+
+  renderMembers();
+
+  renderDocs();
+
+  renderTree();
+
+  alert("সব তথ্য মুছে ফেলা হয়েছে");
+}
+
+
+// ==========================
+// CHANGE PIN
+// ==========================
+
+function changePin(){
+
+  const oldPin =
+    prompt("বর্তমান PIN দিন:");
+
+  if(oldPin !== pin){
+
+    alert("বর্তমান PIN সঠিক নয়");
+
+    return;
+  }
+
+
+  const newPin =
+    prompt("নতুন PIN দিন:");
+
+  if(
+    !newPin ||
+    newPin.length < 4
+  ){
+
+    alert("কমপক্ষে ৪ সংখ্যার PIN দিন");
+
+    return;
+  }
+
+
+  pin = newPin;
+
+  localStorage.setItem(
+    "family_v3_pin",
+    pin
+  );
+
+
+  alert("PIN পরিবর্তন হয়েছে ✅");
+}
+
+
+// ==========================
+// UNLOCK
+// ==========================
+
+function unlock(){
+
+  const value =
+    document.getElementById("pinInput")
+    .value;
+
+
+  if(value === pin){
+
+    document
+      .getElementById("pinScreen")
+      .classList.remove("show");
+
+    document.getElementById("pinInput")
+      .value="";
+
+  }else{
+
+    document.getElementById("pinError")
+      .textContent =
+      "❌ ভুল PIN";
+
+  }
+}
+
+
+// ==========================
+// INIT
+// ==========================
+
+function init(){
+
+  if(!pin){
+
+    pin = "1234";
+
+    localStorage.setItem(
+      "family_v3_pin",
+      pin
+    );
+
+  }else{
+
+    document
+      .getElementById("pinScreen")
+      .classList.add("show");
+
+  }
+
+
+  renderMembers();
+
+  renderDocs();
+
+  renderTree();
+
+  updateStats();
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
